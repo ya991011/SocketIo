@@ -1,0 +1,53 @@
+<!-- 最简单的一对一聊天测试，对本项目没有影响，可以参考，也可以删掉 -->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title></title>
+</head>
+<body>
+	<div>
+		<button id="btn-A">我是A</button>
+		<button id="send-B">A对B说</button>
+		<button id="btn-B">我是B</button>
+		<button id="send-A">B对A说</button>
+	</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	window.onload = function() {
+		
+	}
+    var socket = io.connect('http://192.168.0.104:3001');
+
+    let btn_A = document.getElementById('btn-A');
+    let btn_B = document.getElementById('btn-B');
+    let send_B = document.getElementById('send-B');
+    let send_A = document.getElementById('send-A');
+    btn_A.onclick = function() {
+    	socket.emit('setName', 'A');
+    }
+    send_B.onclick = function() {
+    	socket.emit('sayTo',{to:'B', msg: '我是A'})
+    }
+    btn_B.onclick = function() {
+    	socket.emit('setName', 'B');
+    }
+    send_A.onclick = function() {
+    	socket.emit('sayTo',{to:'A', msg: '我是B'})
+    }
+    socket.on('message',function (data) {
+        console.log(data);
+    })
+    socket.on('users',function (data) {
+        console.log(data);
+        let user = []
+        for(let attr in data) {
+          user.push(attr)
+        }
+        console.log(user)
+    })
+</script>
+</body>
+</html>

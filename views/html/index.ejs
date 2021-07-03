@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="/views/css/index.css">
+  <link rel="stylesheet" href="/views/css/chat-window.css">
+  <title>大番薯聊天室</title>
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 用户列表 -->
+    <div v-show="userList" v-cloak>
+      <div class="nav-box-1">欢迎 ☻ <span id="sign-in">{{ username }}</span> ☻ 当前在线 <span>{{ users.length }}</span> 人
+      </div>
+      <div class="message-box">
+        <ul class="message-list">
+          <li class="message-list-item" v-cloak v-for="(username, index) in users" @click="GoChat(username)">
+            <img :src="urls+''+index">
+            <span>{{ username }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- 聊天窗口 -->
+    <div v-show="chatWindow" v-cloak>
+      <!-- 导航条 -->
+      <div class="nav-box-2">
+        <div><a @click="back">返回</a></div>
+        <div>{{ toName }}</div>
+      </div>
+      <!-- 信息窗口 -->
+      <div class="chat-box">
+        <section v-for="(setMsg, index) in message">
+          <ul class="chatListRight" v-if="setMsg.to==toName&&setMsg.to!==username">
+            <li>
+              <div class="message-right">{{ setMsg.msg }}</div>
+              <img src="https://picsum.photos/100/100?random=1">
+            </li>
+          </ul>
+          <ul class="chatListLeft" v-if="setMsg.setName==toName&&setMsg.server">
+            <li>
+              <img src="https://picsum.photos/100/100?random=2">
+              <div class="message-left">{{ setMsg.msg }}</div>
+            </li>
+          </ul>
+        </section>
+      </div>
+      <!-- 信息输入框，发送按钮 -->
+      <div class="seed-box">
+        <input type="text" autocomplete="off" ref="setMessage" @keyup.enter="sendMessage" @input="inChange"
+          @touchstart="inChange">
+        <button @click="sendMessage">发送</button>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/views/scripts/index.js"></script>
+</body>
+
+</html>
